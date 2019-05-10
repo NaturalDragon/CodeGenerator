@@ -87,8 +87,7 @@ namespace CodeGenerator
         }
         private void CbbTableNameBind()
         {
-            string sql = @"SELECT TABLE_NAME FROM information_schema.`TABLES` 
-                        WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME LIKE concat(?TableTage,'%') AND TABLE_SCHEMA = ?DataBase ;";
+          
             DataTable dt = new DataTable();
             try
             {
