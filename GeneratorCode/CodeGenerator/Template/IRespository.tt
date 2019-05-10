@@ -1,0 +1,25 @@
+﻿<#@ template debug="true" hostspecific="false" language="C#" #>
+<#@ import namespace="System" #>
+<#@ import namespace="CodeGenerator" #>
+<#@ import namespace="CodeGenerator.Model" #>
+<#@ parameter type="CodeGenerator.Model.EntityClassInfo" name="entity" #>
+<#@ parameter type="System.String" name="projectName" #>
+<#@ output extension=".txt" #>
+
+using MicroService.Core;
+using MicroService.Data;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using MicroService.Entity.<#= projectName #>;
+ namespace MicroService.IRespository.<#= projectName #>
+ {
+	/// <summary>
+	/// <#= entity.ClassName#> -仓储接口
+	/// </summary>
+	public interface I<#= entity.ClassName#>Respository:IRespositoryBase<<#= entity.ClassName #>>, IDependency
+	{
+  
+        
+	}
+}

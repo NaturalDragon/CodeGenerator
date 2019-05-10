@@ -1,0 +1,345 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{1628BFFC-2706-4BE2-8C2B-C7ACA7B01FAB}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CodeGenerator</RootNamespace>
+    <AssemblyName>CodeGenerator</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>CodeCreate.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Junior.Common, Version=3.8.0.0, Culture=neutral, PublicKeyToken=998713eb9a0cce30, processorArchitecture=MSIL">
+      <HintPath>..\packages\JuniorCommon.3.8.1\lib\net45\Junior.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Junior.Persist.Data.SqlServer, Version=3.0.0.0, Culture=neutral, PublicKeyToken=998713eb9a0cce30, processorArchitecture=MSIL">
+      <HintPath>..\packages\JuniorPersist.Data.SqlServer.3.0.1\lib\net40\Junior.Persist.Data.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.TextTemplating.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>DLL\Microsoft.VisualStudio.TextTemplating.10.0.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.TextTemplating.Interfaces.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>DLL\Microsoft.VisualStudio.TextTemplating.Interfaces.10.0.dll</HintPath>
+    </Reference>
+    <Reference Include="MySql.Data, Version=6.7.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="Events\IModulesEvent.cs" />
+    <Compile Include="Events\ModulesEvent.cs" />
+    <Compile Include="Events\ValidatorsEvent.cs" />
+    <Compile Include="Events\Base\EventBus.cs" />
+    <Compile Include="Events\Base\IEvent.cs" />
+    <Compile Include="Events\ConfigruationEvent.cs" />
+    <Compile Include="Events\DalEvent.cs" />
+    <Compile Include="Events\DtoEvent.cs" />
+    <Compile Include="Events\EntityEvent.cs" />
+    <Compile Include="Events\ApplicationEvent.cs" />
+    <Compile Include="Events\IApplicationEvent.cs" />
+    <Compile Include="Events\RespositoryEvent.cs" />
+    <Compile Include="Events\IRespositoryEvent.cs" />
+    <Compile Include="Factory\IDbHelper.cs" />
+    <Compile Include="Factory\MySqlEnginee.cs" />
+    <Compile Include="Factory\SqlServerEnginee.cs" />
+    <Compile Include="Factory\DbType.cs" />
+    <Compile Include="Factory\DbTypeInfo.cs" />
+    <Compile Include="Utils\AppConfigSetting.cs" />
+    <Compile Include="Factory\FactoryDb.cs" />
+    <Compile Include="Factory\DbEnginee.cs" />
+    <Compile Include="Utils\FileHelper.cs" />
+    <Compile Include="Utils\ProjectInit.cs" />
+    <Compile Include="Utils\SqlServerDbTypeMap.cs" />
+    <Compile Include="Utils\SqlServerHelper.cs" />
+    <Compile Include="Utils\StringExtensins.cs" />
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Model\CreateCode.cs" />
+    <Compile Include="Model\CustomTextTemplatingEngineHost.cs" />
+    <Compile Include="Model\EntityClassInfo.cs" />
+    <Compile Include="Model\EntityClassPropertyInfo.cs" />
+    <Compile Include="Model\EntityInfo.cs" />
+    <Compile Include="Model\ProjectModel.cs" />
+    <Compile Include="Utils\MySqlHelper.cs" />
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Model\TableModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+    <None Include="Template\DataAccess.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>DataAccess.txt</LastGenOutput>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Template\Entity.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <LastGenOutput>Entity.txt</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Image\CodeCreate.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="CodeCreate.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="DLL\Microsoft.VisualStudio.TextTemplating.10.0.dll" />
+    <Content Include="DLL\Microsoft.VisualStudio.TextTemplating.Interfaces.10.0.dll" />
+    <Content Include="Template\dto\BatchRequestDto.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>BatchRequestDto.txt</LastGenOutput>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Resource Include="Text\FolderBrowser.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Template\dto\BatchRequestDto.txt">
+      <DependentUpon>BatchRequestDto.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Content Include="Template\dto\PageRequestDto.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>PageRequestDto.txt</LastGenOutput>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Resource Include="Template\dto\PageRequestDto.txt">
+      <DependentUpon>PageRequestDto.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Content Include="Template\dto\RequestDto.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>RequestDto.txt</LastGenOutput>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Resource Include="Template\dto\RequestDto.txt">
+      <DependentUpon>RequestDto.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Content Include="Template\dto\QueryDto.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>QueryDto.txt</LastGenOutput>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Resource Include="Template\dto\QueryDto.txt">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>QueryDto.tt</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Content Include="Template\Application.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Application.txt</LastGenOutput>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Resource Include="Template\Application.txt">
+      <DependentUpon>Application.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <DesignTime>True</DesignTime>
+    </Resource>
+    <None Include="Template\Validators.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Validators.txt</LastGenOutput>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Resource Include="Template\Validators.txt">
+      <DependentUpon>Validators.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Resource>
+    <Content Include="Template\Modules.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Modules.txt</LastGenOutput>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Resource Include="Template\Modules.txt">
+      <DependentUpon>Modules.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <DesignTime>True</DesignTime>
+    </Resource>
+    <Content Include="Template\IModules.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>IModules.txt</LastGenOutput>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Resource Include="Template\IModules.txt">
+      <DependentUpon>IModules.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <DesignTime>True</DesignTime>
+    </Resource>
+    <Content Include="Template\IApplication.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>IApplication.txt</LastGenOutput>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Resource Include="Template\IApplication.txt">
+      <DependentUpon>IApplication.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <DesignTime>True</DesignTime>
+    </Resource>
+    <Content Include="Template\Respository.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Respository.txt</LastGenOutput>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Resource Include="Template\Respository.txt">
+      <DependentUpon>Respository.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <DesignTime>True</DesignTime>
+    </Resource>
+    <Content Include="Template\IRespository.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>IRespository.txt</LastGenOutput>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Resource Include="Template\IRespository.txt">
+      <DependentUpon>IRespository.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <DesignTime>True</DesignTime>
+    </Resource>
+    <Content Include="Template\Configuration.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Configuration.txt</LastGenOutput>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Resource Include="Template\Configuration.txt">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Configuration.tt</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Content Include="Template\init.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>init.txt</LastGenOutput>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Resource Include="Template\init.txt">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>init.tt</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Template\Entity.txt">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Entity.tt</DependentUpon>
+    </Resource>
+    <Resource Include="Template\DataAccess.txt">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DataAccess.tt</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

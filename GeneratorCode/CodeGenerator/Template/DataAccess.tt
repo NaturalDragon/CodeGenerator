@@ -1,0 +1,193 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ output extension=".txt" #>
+<#@ import namespace="CodeGenerator" #>
+<#@ import namespace="CodeGenerator.Model" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ parameter type="CodeGenerator.Model.EntityClassInfo" name="entity" #>
+using System;
+using System.Data;
+using System.Configuration;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Web.UI.HtmlControls;
+using MySql.Data.MySqlClient;
+using System.Collections.Generic;
+ 
+/// <summary>
+/// <#= entity.ClassName#> 的摘要说明
+/// </summary>
+public class <#= entity.ClassName#>DAL
+{
+    public <#= entity.ClassName#>DAL()
+    {
+ 
+    }
+ 
+    #region 私有方法
+ 
+    #region 根据实体类获取MySqlParameter数组 +MySqlParameter[] FromModel(<#= entity.ClassName#> model)
+    private static MySqlParameter[] FromModel(<#= entity.ClassName#> model)
+    {
+        List<MySqlParameter> parameterList = new List<MySqlParameter>();
+<#  foreach(EntityClassPropertyInfo property in entity.RopertyList)
+    { 
+#>        parameterList.Add(new MySqlParameter("@<#=property.PropertyName#>", SQLHelper.ToDBValue(model.<#=property.PropertyName#>)));
+<#; 
+    }
+#>
+        return parameterList.ToArray();
+    }
+    #endregion
+ 
+ 
+    #region 将dr中的数据转换为实体类对象 + <#= entity.ClassName#> ToModel(DataRow dr)
+    private static <#= entity.ClassName#> ToModel(DataRow dr)
+    {
+        <#= entity.ClassName#> model = new <#= entity.ClassName#>();
+<#  foreach(EntityClassPropertyInfo property in entity.RopertyList)
+    { 
+        if(property.IsValueType)
+        {
+#>        model.<#=property.PropertyName#> = Convert.To<#= property.PropertyType#>(SQLHelper.FromDBValue(dr["<#= property.PropertyName #>"]));
+<#;
+        }
+        else
+        {
+#>        model.<#=property.PropertyName#> = SQLHelper.FromDBValue(dr["<#=property.PropertyName#>"]) as <#=property.PropertyType#>;
+<#;
+        }
+    }
+#>
+        return model;
+    }
+    #endregion
+ 
+    #endregion
+ 
+    #region 增 + int Insert(<#= entity.ClassName#> model)
+    public static int Insert(<#= entity.ClassName#> model)
+    {
+        int result = -1;
+        string sql = @"INSERT INTO <#= entity.ClassName#>(<#= string.Join(",",GetSqlInsertInto()) #>) 
+                VALUES(<#= string.Join(",",GetSqlInsertValue()) #>);";
+        
+        result = SQLHelper.ExecuteNonQuery(sql,FromModel(model));
+       
+        return result;
+    }
+    #endregion
+ 
+    #region 删 + int DeleteById(<#= string.Join(",",GetSqlDelVariable()) #>)
+    public static int DeleteById(<#= string.Join(",",GetSqlDelVariable()) #>)
+    {
+        int result = -1;
+        string sql = @"DELETE FROM <#= entity.ClassName#> WHERE <#= string.Join(" AND ",GetSqlWhereId()) #>;";
+ 
+        result = SQLHelper.ExecuteNonQuery(sql,<#= string.Join(",",GetSqlDelParameter()) #>);
+        
+        return result;
+    }
+    #endregion
+    
+    #region 改 + int Update(<#= entity.ClassName#> model)
+    public static int Update(<#= entity.ClassName#> model)
+    {
+        int result = -1;
+        string sql = @"UPDATE <#= entity.ClassName#> 
+                     SET <#= string.Join(",",GetSqlUpdateSet()) #>
+                     WHERE <#= string.Join(" AND ",GetSqlWhereId()) #>";
+        
+        result = SQLHelper.ExecuteNonQuery(sql, FromModel(model));
+       
+        return result;
+    }
+    #endregion
+    
+    #region 查 + int GetCountAll()
+    public static int GetCountAll()
+    {
+        int result = 0;
+        string sql = @"SELECT Count(*) FROM <#= entity.ClassName#>;";
+ 
+        result = Convert.ToInt32(SQLHelper.ExecuteScalar(sql));
+       
+        return result;
+    }
+    #endregion
+ 
+    #region 查 + List<<#= entity.ClassName#>> GetBySql(string sql,params MySqlParameter[] parameters)
+    public static List<<#= entity.ClassName#>> GetBySql(string sql,params MySqlParameter[] parameters)
+    {
+        List<<#= entity.ClassName#>> modelList = new List<<#= entity.ClassName#>>();
+        DataTable dt = SQLHelper.ExecuteDataTable(sql,parameters);
+        
+        foreach (DataRow dr in dt.Rows)
+        {
+            modelList.Add(ToModel(dr));
+        }
+        return modelList;
+    }
+    #endregion
+}
+ 
+<#+
+    private string[] GetSqlInsertInto()
+    {
+        List<string> propertyNameList= new List<string>();
+        foreach(EntityClassPropertyInfo property in entity.RopertyList)
+        {
+            propertyNameList.Add(property.PropertyName);
+        }
+        return propertyNameList.ToArray();
+    }
+    private string[] GetSqlInsertValue()
+    {
+        List<string> propertyNameList= new List<string>();
+        foreach(EntityClassPropertyInfo property in entity.RopertyList)
+        {
+            propertyNameList.Add("@" + property.PropertyName);
+        }
+        return propertyNameList.ToArray();
+    }
+    private string[] GetSqlDelVariable()
+    {
+        List<string> propertyList= new List<string>();
+        foreach(EntityClassPropertyInfo property in entity.PrimaryKeyList)
+        {
+            propertyList.Add(property.PropertyType + "  m_" + property.PropertyName);
+        }
+        return propertyList.ToArray();
+    }
+    private string[] GetSqlDelParameter()
+    {
+        List<string> propertyList= new List<string>();
+        foreach(EntityClassPropertyInfo property in entity.PrimaryKeyList)
+        {
+            propertyList.Add("new MySqlParameter(@\"" + property.PropertyName + "\" ,m_" + property.PropertyName + ")");
+        }
+        return propertyList.ToArray();
+    }
+ 
+    private string[] GetSqlUpdateSet()
+    {
+        List<string> propertyList= new List<string>();
+        foreach(EntityClassPropertyInfo property in entity.NotPrimaryKeyList)
+        {
+            propertyList.Add(property.PropertyName +"=@" + property.PropertyName);
+        }
+        return propertyList.ToArray();
+    }
+    private string[] GetSqlWhereId()
+    {
+        List<string> propertyList= new List<string>();
+        foreach(EntityClassPropertyInfo property in entity.PrimaryKeyList)
+        {
+            propertyList.Add(property.PropertyName +"=@" + property.PropertyName);
+        }
+        return propertyList.ToArray();
+    }
+   
+ #>

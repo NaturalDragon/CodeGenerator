@@ -1,0 +1,184 @@
+﻿<#@ template debug="true" hostspecific="false" language="C#" #>
+<#@ import namespace="System" #>
+<#@ import namespace="CodeGenerator" #>
+<#@ import namespace="CodeGenerator.Model" #>
+<#@ parameter type="CodeGenerator.Model.EntityClassInfo" name="entity" #>
+<#@ parameter type="System.String" name="projectName" #>
+<#@ output extension=".txt" #>
+
+using System;
+using System.Linq;
+using System.Text;
+using System.Data;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using MicroService.Data.Ext;
+using MicroService.IApplication.<#= projectName #>;
+using MicroService.IRespository.<#= projectName #>;
+using MicroService.Entity.<#= projectName #>;
+using MicroService.IApplication.<#= projectName #>.Dto;
+using MicroService.Core.Data;
+using MicroService.Data.Validation;
+using MicroService.Application.<#= projectName #>.Validators;
+using MicroService.Data.Extensions;
+using MicroService.Data.Common;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+
+ namespace MicroService.Application.<#= projectName #>
+ {
+	/// <summary>
+	/// <#= entity.ClassName#> -applaction实现
+	/// </summary>
+	public class <#= entity.ClassName#>AppService: ApplicationEnginee, I<#= entity.ClassName#>AppService
+	{
+     
+        public I<#= entity.ClassName#>Respository _<#= entity.ClassNameLower #>Respository;
+        private readonly IMapper _mapper;
+        public IUnitOfWork _unitOfWork;
+
+        public <#= entity.ClassName#>AppService(I<#= entity.ClassName#>Respository <#= entity.ClassNameLower #>Respository, IUnitOfWork unitOfWork,
+          IMapper mapper)
+        {
+            _<#= entity.ClassNameLower #>Respository = <#= entity.ClassNameLower #>Respository;
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
+        }
+        /// <summary>
+        ///异步验证
+        /// </summary>
+        private async Task DoValidationAsync(<#= entity.ClassName#> <#= entity.ClassNameLower #>, string validatorType)
+        {
+            var <#= entity.ClassNameLower #>Validator = new <#= entity.ClassName#>Validator();
+            var validatorReresult = await <#= entity.ClassNameLower #>Validator.DoValidateAsync(<#= entity.ClassNameLower #>, validatorType);
+            if (!validatorReresult.IsValid)
+            {
+                throw new DomainException(validatorReresult);
+            }
+        }
+
+        /// <summary>
+        ///异步验证
+        /// </summary>
+        private async Task DoValidationAsync(IEnumerable<<#= entity.ClassName#>> <#= entity.ClassNameLower #>s, string validatorType)
+        {
+            var <#= entity.ClassNameLower #>Validator = new <#= entity.ClassName#>Validator();
+            var domainException = new DomainException();
+            foreach (var <#= entity.ClassNameLower #> in <#= entity.ClassNameLower #>s)
+            {
+                var validatorReresult = await <#= entity.ClassNameLower #>Validator.DoValidateAsync(<#= entity.ClassNameLower #>, validatorType);
+                if (!validatorReresult.IsValid)
+                {
+                    domainException.AddErrors(validatorReresult);
+                }
+
+            }
+
+            if (domainException.ValidationErrors.ErrorItems.Any()) throw domainException;
+        }
+        /// <summary>
+          /// 新增
+          /// </summary>
+          /// <param name="<#= entity.ClassNameLower #>RequestDto"></param>
+          /// <returns></returns>
+        public async Task<JsonResponse> CreateAsync(<#= entity.ClassName#>RequestDto <#= entity.ClassNameLower #>RequestDto)
+        {
+         
+          
+            var resJson = await TryTransactionAsync(async () =>
+              {
+                  var <#= entity.ClassNameLower #> = _mapper.Map<<#= entity.ClassName#>RequestDto, <#= entity.ClassName#>>(<#= entity.ClassNameLower #>RequestDto);
+                  await DoValidationAsync(<#= entity.ClassNameLower #>, ValidatorTypeConstants.Create);
+                  await _<#= entity.ClassNameLower#>Respository.InsertAsync(<#= entity.ClassNameLower #>);
+
+                  await _unitOfWork.SaveChangesAsync();
+              });
+            return resJson;
+        }
+        /// <summary>
+        /// 批量新增
+        /// </summary>
+        /// <param name="<#= entity.ClassNameLower #>RequestDtos"></param>
+        /// <returns></returns>
+        public async Task<JsonResponse> BatchCreateAsync(IList<<#= entity.ClassName#>RequestDto> <#= entity.ClassNameLower #>RequestDtos)
+        {
+            var resJson = await TryTransactionAsync(async () =>
+            {
+                var entities = <#= entity.ClassNameLower #>RequestDtos.MapToList<<#= entity.ClassName#>RequestDto, <#= entity.ClassName#>>();
+                await DoValidationAsync(entities, ValidatorTypeConstants.Create);
+                await _<#= entity.ClassNameLower#>Respository.BatchInsertAsync(entities);
+
+                await _unitOfWork.SaveChangesAsync();
+            });
+            return resJson;
+        }
+
+      
+        /// <summary>
+        /// 分页获取
+        /// </summary>
+        /// <param name="<#= entity.ClassNameLower #>PageRequestDto"></param>
+        /// <returns></returns>
+
+        public async Task<PageData> GetPageListAsync( <#= entity.ClassName#>PageRequestDto <#= entity.ClassNameLower #>PageRequestDto)
+        {
+            var pageData = new PageData(<#= entity.ClassNameLower #>PageRequestDto.PageIndex, <#= entity.ClassNameLower #>PageRequestDto.PageSize);
+            var list = await _<#= entity.ClassNameLower#>Respository.Entities(e=>e.IsDelete==false).ToPaginated(pageData).ToListAsync();
+
+            return pageData;
+
+        }
+        /// <summary>
+        /// 获取详情
+        /// </summary>
+        /// <param name="entityQueryRequest"></param>
+        /// <returns></returns>
+        public async Task<<#= entity.ClassName#>QueryDto> GetForModifyAsync(EntityQueryRequest entityQueryRequest)
+        {
+            var entity = await _<#= entity.ClassNameLower#>Respository.Entities(e => e.Id == entityQueryRequest.Id).SingleOrDefaultAsync();
+            if (entity != null)
+            {
+                return entity.MapEntity<<#= entity.ClassName#>, <#= entity.ClassName#>QueryDto>();
+            }
+            return null;
+        }
+        /// <summary>
+        /// 修改
+        /// </summary>
+        /// <param name="<#= entity.ClassNameLower #>RequestDto"></param>
+        /// <returns></returns>
+        public async Task<JsonResponse> ModifyAsync(<#= entity.ClassName#>RequestDto <#= entity.ClassNameLower #>RequestDto)
+        {
+           
+            var resJson = await TryTransactionAsync(async () =>
+            {
+                var <#= entity.ClassNameLower #> = _mapper.Map<<#= entity.ClassName#>RequestDto, <#= entity.ClassName#>>(<#= entity.ClassNameLower #>RequestDto);
+                await DoValidationAsync(<#= entity.ClassNameLower #>, ValidatorTypeConstants.Modify);
+                await _<#= entity.ClassNameLower#>Respository.UpdateAsync(<#= entity.ClassNameLower #>);
+                await _unitOfWork.SaveChangesAsync();
+            });
+            return resJson;
+        }
+
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        public async Task<JsonResponse> RemoveAsync(params string[] ids)
+        {
+            var resJson = await TryTransactionAsync(async () =>
+            {
+                await _<#= entity.ClassNameLower#>Respository.UpdateAsync(ids,  async (e)=> {
+
+                    await Task.Run(() =>
+                   {
+                       e.IsDelete = true;
+                   });
+                });
+                await _unitOfWork.SaveChangesAsync();
+            });
+           return resJson;
+        }
+	}
+}

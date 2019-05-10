@@ -1,0 +1,51 @@
+﻿<#@ template debug="true" hostspecific="false" language="C#" #>
+<#@ output extension=".txt" #>
+<#@ import namespace="System" #>
+<#@ import namespace="CodeGenerator" #>
+<#@ import namespace="CodeGenerator.Model" #>
+<#@ parameter type="CodeGenerator.Model.EntityClassInfo" name="entity" #>
+<#@ parameter type="System.String" name="projectName" #>
+using System;
+using System.Collections.Generic;
+using System.Text;
+using FluentValidation;
+using MicroService.Data.Constant;
+using MicroService.Data.Validation;
+using MicroService.Entity.<#= projectName #>;
+
+ namespace MicroService.Application.<#= projectName#>.Validators
+ {
+	 public  class <#= entity.ClassName#>Validator : AbstractValidator<<#= entity.ClassName#>>
+	 {
+        public <#= entity.ClassName#>Validator()
+        {
+            RuleSet(ValidatorTypeConstants.Create, () =>
+            {
+                BaseValidator();
+            });
+            RuleSet(ValidatorTypeConstants.Modify, () =>
+            {
+                BaseValidator();
+            });
+
+        }
+
+        void BaseValidator()
+	     {
+		    RuleFor(per => per.Id).NotNull().WithMessage(x => string.Format(ErrorMessage.IsRequired, "主键Id"));
+            RuleFor(per => per.CreateDate).NotEmpty().WithMessage(x => string.Format(ErrorMessage.IsRequired, "创建时间CreateDate"));
+            RuleFor(per => per.IsDelete).NotEmpty().WithMessage(x => string.Format(ErrorMessage.IsRequired, "删除状态IsDelete"));
+			<#if(entity.RopertyList != null && entity.RopertyList.Count > 0){
+				foreach(var column in entity.RopertyList){#>
+				<#if(!column.ProptertyIsNull){#>				
+			RuleFor(m => m.<#=column.PropertyName#>).NotNull().WithMessage(x=>string.Format(ErrorMessage.IsRequired,"<#=column.ProptertyComment#>"));
+				<#}
+			if(column.ProptertyMaxLength > 0 && column.PropertyType == "string"){#>
+			RuleFor(m => m.<#=column.PropertyName#>).Length(0,<#=column.ProptertyMaxLength#>).WithMessage(x=>string.Format(ErrorMessage.IsLengthError, <#=column.ProptertyMaxLength#>));
+			<#}
+			}
+			}#>
+         }
+	   }
+
+ }

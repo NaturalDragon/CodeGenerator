@@ -1,0 +1,63 @@
+﻿<#@ template debug="true" hostspecific="false" language="C#" #>
+<#@ import namespace="System" #>
+<#@ import namespace="CodeGenerator" #>
+<#@ import namespace="CodeGenerator.Model" #>
+<#@ parameter type="CodeGenerator.Model.EntityClassInfo" name="entity" #>
+<#@ parameter type="System.String" name="projectName" #>
+<#@ output extension=".txt" #>
+
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Text;
+using System.Threading.Tasks;
+using MicroService.Core;
+using MicroService.Data.Common;
+using MicroService.Data.Validation;
+using MicroService.IApplication.<#= projectName #>.Dto;
+
+ namespace MicroService.IApplication.<#= projectName #>
+ {
+	/// <summary>
+	/// <#= entity.ClassName#> -applaction实现
+	/// </summary>
+	public interface I<#= entity.ClassName#>AppService: IDependency
+	{
+        /// <summary>
+        /// 新增
+        /// </summary>
+        /// <param name="<#= entity.ClassNameLower #>RequestDto"></param>
+        /// <returns></returns>
+        Task<JsonResponse> CreateAsync(<#= entity.ClassName #>RequestDto <#= entity.ClassNameLower #>RequestDto);
+		/// <summary>
+        /// 批量新增
+        /// </summary>
+        /// <param name="<#= entity.ClassNameLower #>RequestDtos"></param>
+        /// <returns></returns>
+        Task<JsonResponse> BatchCreateAsync(IList<<#= entity.ClassName #>RequestDto> <#= entity.ClassNameLower #>RequestDtos);
+        /// <summary>
+        /// 分页获取
+        /// </summary>
+        /// <param name="<#= entity.ClassNameLower #>PageRequestDto"></param>
+        /// <returns></returns>
+        Task<PageData> GetPageListAsync(<#= entity.ClassName #>PageRequestDto <#= entity.ClassNameLower #>PageRequestDto);
+		 /// <summary>
+        /// 获取详情
+        /// </summary>
+        /// <param name="entityQueryRequest"></param>
+        /// <returns></returns>
+        Task<<#= entity.ClassName #>QueryDto> GetForModifyAsync(EntityQueryRequest entityQueryRequest);
+		/// <summary>
+        /// 修改
+        /// </summary>
+        /// <param name="<#= entity.ClassNameLower #>RequestDto"></param>
+        /// <returns></returns>
+        Task<JsonResponse> ModifyAsync(<#= entity.ClassName #>RequestDto <#= entity.ClassNameLower #>RequestDto);
+		/// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        Task<JsonResponse> RemoveAsync(params string[] ids);
+	}
+}

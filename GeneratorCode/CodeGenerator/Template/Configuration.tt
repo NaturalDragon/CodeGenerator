@@ -1,0 +1,51 @@
+﻿<#@ template debug="true" hostspecific="false" language="C#" #>
+<#@ import namespace="System" #>
+<#@ import namespace="CodeGenerator" #>
+<#@ import namespace="CodeGenerator.Model" #>
+<#@ parameter type="CodeGenerator.Model.EntityClassInfo" name="entity" #>
+<#@ parameter type="System.String" name="projectName" #>
+<#@ output extension=".txt" #>
+
+using MicroService.Data.Mapping;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+ namespace MicroService.Entity.<#= projectName #>.Configuration
+ {
+	/// <summary>
+	/// <#= entity.ClassName#> -映射
+	/// </summary>
+	public class <#= entity.ClassName#>Configruation:EntityMappingConfiguration<<#= entity.ClassName  #>>
+	{
+  
+         public override void Map(EntityTypeBuilder<<#= entity.ClassName #>> b)
+			{ 
+			   b.ToTable("<#= entity.ClassName #>").HasKey(p => p.Id);
+		<#foreach(EntityClassPropertyInfo property in entity.RopertyList)
+				{ #>
+			   <# if(property.PropertyType=="string") { #>
+				        <# if(property.ProptertyMaxLength>0&&!property.ProptertyIsNull) { #>
+			   b.Property(p => p.<#= property.PropertyName #>).IsRequired().HasMaxLength(<#= property.ProptertyMaxLength #>); 
+			            	<#} else if(property.ProptertyMaxLength>0&&property.ProptertyIsNull){#>  
+			   b.Property(p => p.<#= property.PropertyName #>).HasMaxLength(<#= property.ProptertyMaxLength #>); 
+							 <# }else if(!(property.ProptertyMaxLength>0)&&property.ProptertyIsNull){ #>
+			   b.Property(p => p.<#= property.PropertyName #>); 
+							 <# } else if(!(property.ProptertyMaxLength>0)&&!property.ProptertyIsNull){#>
+			   b.Property(p => p.<#= property.PropertyName #>).IsRequired();
+							 <# } #>
+			   	<#} else{ #>
+				          <# if(property.ProptertyIsNull) { #>
+			   b.Property(p => p.<#= property.PropertyName #>); 
+							<#}else {#> 
+			   b.Property(p => p.<#= property.PropertyName #>).IsRequired(); 
+							<# } #>
+					<#}#>		
+	      <#; } #>
+		        b.Property(p => p.IsDelete); 
+                b.Property(p => p.CreateDate);
+			  }
+	}
+}

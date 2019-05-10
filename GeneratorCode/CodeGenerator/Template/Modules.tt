@@ -1,0 +1,103 @@
+﻿<#@ template debug="true" hostspecific="false" language="C#" #>
+<#@ import namespace="System" #>
+<#@ import namespace="CodeGenerator" #>
+<#@ import namespace="CodeGenerator.Model" #>
+<#@ parameter type="CodeGenerator.Model.EntityClassInfo" name="entity" #>
+<#@ parameter type="System.String" name="projectName" #>
+<#@ output extension=".txt" #>
+
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
+using System.Linq;
+using System.Data;
+using MicroService.Data.Common;
+using MicroService.Data.Extensions;
+using MicroService.Data.Validation;
+using MicroService.IApplication.<#= projectName #>;
+using MicroService.IApplication.<#= projectName #>.Dto;
+using MicroService.IModules.<#= projectName #>;
+using Surging.Core.CPlatform.Ioc;
+using Surging.Core.ProxyGenerator;
+using Surging.Core.CPlatform.Utilities;
+using Newtonsoft.Json;
+
+ namespace MicroService.Modules.<#= projectName #>
+ {
+	/// <summary>
+	/// <#= entity.ClassName#> -Module实现
+	/// </summary>
+	public class <#= entity.ClassName#>Service: ProxyServiceBase, I<#= entity.ClassName#>Service
+	{
+	    private readonly I<#= entity.ClassName#>AppService _<#= entity.ClassNameLower#>AppService;
+        public <#= entity.ClassName#>Service(I<#= entity.ClassName#>AppService <#= entity.ClassNameLower#>AppService)
+        {
+            _<#= entity.ClassNameLower#>AppService = <#= entity.ClassNameLower#>AppService;
+        }
+		/// <summary>
+        /// 新增
+        /// </summary>
+        /// <param name="<#= entity.ClassNameLower#>RequestDto"></param>
+        /// <returns></returns>
+        public async Task<JsonResponse> Create(<#= entity.ClassName#>RequestDto <#= entity.ClassNameLower#>RequestDto)
+        { 
+		    <#= entity.ClassNameLower#>RequestDto.ToLoginUser();
+            return await _<#= entity.ClassNameLower#>AppService.CreateAsync(<#= entity.ClassNameLower#>RequestDto);
+        }
+         /// <summary>
+        /// 批量新增
+        /// </summary>
+        /// <param name="<#= entity.ClassNameLower#>BatchRequestDto"></param>
+        /// <returns></returns>
+        public async Task<JsonResponse> BatchCreate(<#= entity.ClassName#>BatchRequestDto <#= entity.ClassNameLower#>BatchRequestDto)
+        {
+		    foreach (var <#= entity.ClassNameLower#>Request in <#= entity.ClassNameLower#>BatchRequestDto.<#= entity.ClassName#>RequestList)
+            {
+                <#= entity.ClassNameLower#>Request.ToLoginUser();
+            }
+            return await _<#= entity.ClassNameLower#>AppService.BatchCreateAsync(<#= entity.ClassNameLower#>BatchRequestDto.<#= entity.ClassName#>RequestList);
+        }
+        /// <summary>
+        /// 分页获取
+        /// </summary>
+        /// <param name="<#= entity.ClassNameLower#>PageRequestDto"></param>
+        /// <returns></returns>
+        public async Task<PageData> GetPageList(<#= entity.ClassName#>PageRequestDto <#= entity.ClassNameLower#>PageRequestDto)
+        { 
+		    <#= entity.ClassNameLower#>PageRequestDto.ToLoginUser();
+            return await _<#= entity.ClassNameLower#>AppService.GetPageListAsync(<#= entity.ClassNameLower#>PageRequestDto);
+        }
+
+        /// <summary>
+        /// 获取详情
+        /// </summary>
+        /// <param name="entityQueryRequest"></param>
+        /// <returns></returns>
+        public async Task<<#= entity.ClassName#>QueryDto> GetForModify(EntityQueryRequest entityQueryRequest)
+        {
+		    entityQueryRequest.ToLoginUser();
+            return await _<#= entity.ClassNameLower#>AppService.GetForModifyAsync(entityQueryRequest);
+        }
+        /// <summary>
+        /// 修改
+        /// </summary>
+        /// <param name="<#= entity.ClassNameLower#>RequestDto"></param>
+        /// <returns></returns>
+        public async Task<JsonResponse> Modify(<#= entity.ClassName#>RequestDto <#= entity.ClassNameLower#>RequestDto)
+        {
+	     	<#= entity.ClassNameLower#>RequestDto.ToLoginUser();
+            return await _<#= entity.ClassNameLower#>AppService.ModifyAsync(<#= entity.ClassNameLower#>RequestDto);
+        }
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="entityRequest"></param>
+        /// <returns></returns>
+        public async Task<JsonResponse> Remove(EntityRequest entityRequest)
+        {
+		    entityRequest.ToLoginUser();
+            return await _<#= entity.ClassNameLower#>AppService.RemoveAsync(entityRequest.Ids.ToArray());
+        }
+	}
+}
