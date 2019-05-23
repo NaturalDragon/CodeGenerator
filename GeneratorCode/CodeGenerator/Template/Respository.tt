@@ -20,7 +20,7 @@ using MicroService.EntityFramwork;
 	/// </summary>
      public class <#= entity.ClassName #>Respository : RespositoryBase<<#= entity.ClassName #>>, I<#= entity.ClassName #>Respository
     {
-        public <#= entity.ClassName #>Respository(IUnitOfWorkDbContext dbDbContext) : base(dbDbContext)
+        public <#= entity.ClassName #>Respository()
         {
         }
     }

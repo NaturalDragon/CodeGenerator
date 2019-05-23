@@ -33,8 +33,8 @@ using MicroService.Entity.<#= projectName #>;
         void BaseValidator()
 	     {
 		    RuleFor(per => per.Id).NotNull().WithMessage(x => string.Format(ErrorMessage.IsRequired, "主键Id"));
-            RuleFor(per => per.CreateDate).NotEmpty().WithMessage(x => string.Format(ErrorMessage.IsRequired, "创建时间CreateDate"));
-            RuleFor(per => per.IsDelete).NotEmpty().WithMessage(x => string.Format(ErrorMessage.IsRequired, "删除状态IsDelete"));
+            RuleFor(per => per.CreateDate).NotNull().WithMessage(x => string.Format(ErrorMessage.IsRequired, "创建时间CreateDate"));
+            RuleFor(per => per.IsDelete).NotNull().WithMessage(x => string.Format(ErrorMessage.IsRequired, "删除状态IsDelete"));
 			<#if(entity.RopertyList != null && entity.RopertyList.Count > 0){
 				foreach(var column in entity.RopertyList){#>
 				<#if(!column.ProptertyIsNull){#>				

@@ -35,13 +35,11 @@ using Microsoft.EntityFrameworkCore;
      
         public I<#= entity.ClassName#>Respository _<#= entity.ClassNameLower #>Respository;
         private readonly IMapper _mapper;
-        public IUnitOfWork _unitOfWork;
 
-        public <#= entity.ClassName#>AppService(I<#= entity.ClassName#>Respository <#= entity.ClassNameLower #>Respository, IUnitOfWork unitOfWork,
+        public <#= entity.ClassName#>AppService(I<#= entity.ClassName#>Respository <#= entity.ClassNameLower #>Respository,
           IMapper mapper)
         {
             _<#= entity.ClassNameLower #>Respository = <#= entity.ClassNameLower #>Respository;
-            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
         /// <summary>
@@ -90,8 +88,7 @@ using Microsoft.EntityFrameworkCore;
                   var <#= entity.ClassNameLower #> = _mapper.Map<<#= entity.ClassName#>RequestDto, <#= entity.ClassName#>>(<#= entity.ClassNameLower #>RequestDto);
                   await DoValidationAsync(<#= entity.ClassNameLower #>, ValidatorTypeConstants.Create);
                   await _<#= entity.ClassNameLower#>Respository.InsertAsync(<#= entity.ClassNameLower #>);
-
-                  await _unitOfWork.SaveChangesAsync();
+                  await _<#= entity.ClassNameLower#>Respository.SaveChangesAsync();
               });
             return resJson;
         }
@@ -107,8 +104,7 @@ using Microsoft.EntityFrameworkCore;
                 var entities = <#= entity.ClassNameLower #>RequestDtos.MapToList<<#= entity.ClassName#>RequestDto, <#= entity.ClassName#>>();
                 await DoValidationAsync(entities, ValidatorTypeConstants.Create);
                 await _<#= entity.ClassNameLower#>Respository.BatchInsertAsync(entities);
-
-                await _unitOfWork.SaveChangesAsync();
+                await _<#= entity.ClassNameLower#>Respository.SaveChangesAsync();
             });
             return resJson;
         }
@@ -155,7 +151,7 @@ using Microsoft.EntityFrameworkCore;
                 var <#= entity.ClassNameLower #> = _mapper.Map<<#= entity.ClassName#>RequestDto, <#= entity.ClassName#>>(<#= entity.ClassNameLower #>RequestDto);
                 await DoValidationAsync(<#= entity.ClassNameLower #>, ValidatorTypeConstants.Modify);
                 await _<#= entity.ClassNameLower#>Respository.UpdateAsync(<#= entity.ClassNameLower #>);
-                await _unitOfWork.SaveChangesAsync();
+                await _<#= entity.ClassNameLower#>Respository.SaveChangesAsync();
             });
             return resJson;
         }
@@ -170,13 +166,12 @@ using Microsoft.EntityFrameworkCore;
             var resJson = await TryTransactionAsync(async () =>
             {
                 await _<#= entity.ClassNameLower#>Respository.UpdateAsync(ids,  async (e)=> {
-
                     await Task.Run(() =>
                    {
                        e.IsDelete = true;
                    });
                 });
-                await _unitOfWork.SaveChangesAsync();
+                await _<#= entity.ClassNameLower#>Respository.SaveChangesAsync();
             });
            return resJson;
         }
