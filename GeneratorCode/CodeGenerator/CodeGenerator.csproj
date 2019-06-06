@@ -80,6 +80,7 @@
     </ApplicationDefinition>
     <Compile Include="Events\IModulesEvent.cs" />
     <Compile Include="Events\ModulesEvent.cs" />
+    <Compile Include="Events\ValidatorsFiltersEvent.cs" />
     <Compile Include="Events\ValidatorsEvent.cs" />
     <Compile Include="Events\Base\EventBus.cs" />
     <Compile Include="Events\Base\IEvent.cs" />
@@ -178,6 +179,16 @@
       <LastGenOutput>BatchRequestDto.txt</LastGenOutput>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Template\ValidatorsFilters.txt">
+      <DependentUpon>ValidatorsFilters.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Resource>
+    <None Include="Template\ValidatorsFilters.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ValidatorsFilters.txt</LastGenOutput>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Resource Include="Text\FolderBrowser.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>

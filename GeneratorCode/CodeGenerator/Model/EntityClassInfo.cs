@@ -19,7 +19,8 @@ namespace CodeGenerator.Model
             {
                 return new List<string>()
                 {
-                    "Id","IsDelete","CreateDate"
+                    "Id","IsDelete","CreateDate","CreateUserId","CreateUserName",
+                    "ModifyUserId","ModifyDate","ModifyUserName"
                 };
             }
         }

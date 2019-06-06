@@ -252,8 +252,27 @@ namespace CodeGenerator.Model
             CodeVisible(richTextBox, sb);
             return sb.ToString();
         }
+        public static string CreateValidatorsFiltersClass(List<EntityClassInfo> classInfos, string basePath, RichTextBox richTextBox = null)
+        {
+            string templatePath = AppConfigSetting.TemplateValidatorsFilters;
+            StringBuilder sb = new StringBuilder();
+            var projectName = FileHelper.GetProjectName(basePath);
+            var lastPath = FileHelper.GetLastTwoLevel(basePath);
+            var iRespositoryPath = string.Format($"{lastPath}{AppConfigSetting.Application}\\ValidatorsFilters\\", projectName);
+            FileHelper.CreateFoler(iRespositoryPath);
+            foreach (var classInfo in classInfos)
+            {
 
-
+                string output = InitTemplate(classInfo, templatePath, projectName);
+                File.WriteAllText(iRespositoryPath + classInfo.ClassName + "ValidatorsFilter.cs",
+                output);
+                sb.Append(output);
+                sb.Append("\r\n");
+            }
+            CodeVisible(richTextBox, sb);
+            return sb.ToString();
+        }
+        
 
         /// <summary>
         /// 创建IModules

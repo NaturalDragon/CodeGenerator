@@ -44,8 +44,13 @@ using System.Text;
 							<# } #>
 					<#}#>		
 	      <#; } #>
-		        b.Property(p => p.IsDelete); 
-                b.Property(p => p.CreateDate);
+		        b.Property(p => p.IsDelete).IsRequired(); 
+                b.Property(p => p.CreateDate).IsRequired();
+				b.Property(p => p.CreateUserId).IsRequired().HasMaxLength(36);
+				b.Property(p => p.CreateUserName).IsRequired().HasMaxLength(32);
+                b.Property(p => p.ModifyUserId).HasMaxLength(36);;
+				b.Property(p => p.ModifyDate);
+				b.Property(p => p.ModifyUserName).HasMaxLength(32);
 			  }
 	}
 }

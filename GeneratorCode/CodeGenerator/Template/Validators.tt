@@ -12,12 +12,12 @@ using FluentValidation;
 using MicroService.Data.Constant;
 using MicroService.Data.Validation;
 using MicroService.Entity.<#= projectName #>;
-
+using MicroService.IRespository.<#= projectName #>;
  namespace MicroService.Application.<#= projectName#>.Validators
  {
 	 public  class <#= entity.ClassName#>Validator : AbstractValidator<<#= entity.ClassName#>>
 	 {
-        public <#= entity.ClassName#>Validator()
+        public <#= entity.ClassName#>Validator(I<#= entity.ClassName#>Respository <#= entity.ClassNameLower #>Respository)
         {
             RuleSet(ValidatorTypeConstants.Create, () =>
             {
@@ -35,7 +35,12 @@ using MicroService.Entity.<#= projectName #>;
 		    RuleFor(per => per.Id).NotNull().WithMessage(x => string.Format(ErrorMessage.IsRequired, "主键Id"));
             RuleFor(per => per.CreateDate).NotNull().WithMessage(x => string.Format(ErrorMessage.IsRequired, "创建时间CreateDate"));
             RuleFor(per => per.IsDelete).NotNull().WithMessage(x => string.Format(ErrorMessage.IsRequired, "删除状态IsDelete"));
-			<#if(entity.RopertyList != null && entity.RopertyList.Count > 0){
+		   
+		    RuleFor(per => per.CreateUserId).NotNull().WithMessage(x => string.Format(ErrorMessage.IsRequired, "创建人CreateUserId"));
+            RuleFor(per => per.CreateUserName).NotNull().WithMessage(x => string.Format(ErrorMessage.IsRequired, "创建人姓名CreateUserName"));
+			
+		
+		<#if(entity.RopertyList != null && entity.RopertyList.Count > 0){
 				foreach(var column in entity.RopertyList){#>
 				<#if(!column.ProptertyIsNull){#>				
 			RuleFor(m => m.<#=column.PropertyName#>).NotNull().WithMessage(x=>string.Format(ErrorMessage.IsRequired,"<#=column.ProptertyComment#>"));

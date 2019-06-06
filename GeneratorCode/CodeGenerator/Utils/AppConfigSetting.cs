@@ -103,7 +103,13 @@ namespace CodeGenerator.Utils
                 return ConfigurationManager.AppSettings["TemplateValidators"].ToString();
             }
         }
-
+        public static string TemplateValidatorsFilters
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["TemplateValidatorsFilters"].ToString();
+            }
+        }
         public static string TemplateIModules
         {
             get

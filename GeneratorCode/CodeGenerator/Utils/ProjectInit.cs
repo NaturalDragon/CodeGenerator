@@ -23,6 +23,7 @@ namespace CodeGenerator.Utils
                 new ProjectModel(){ Name="IApplication", Key="IApplicationEvent" ,Checked=false},
                 new ProjectModel(){ Name="Application", Key="ApplicationEvent" ,Checked=false},
                 new ProjectModel(){ Name="Validators", Key="ValidatorsEvent" ,Checked=false},
+                new ProjectModel(){ Name="ValidatorsFilters", Key="ValidatorsFiltersEvent" ,Checked=false},
                 new ProjectModel(){ Name="IModules", Key="IModulesEvent" ,Checked=false},
                 new ProjectModel(){ Name="Modules", Key="ModulesEvent" ,Checked=false},
                 
