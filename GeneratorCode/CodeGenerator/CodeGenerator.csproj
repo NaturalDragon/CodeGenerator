@@ -80,6 +80,7 @@
     </ApplicationDefinition>
     <Compile Include="Events\IModulesEvent.cs" />
     <Compile Include="Events\ModulesEvent.cs" />
+    <Compile Include="Events\ControllerEvent.cs" />
     <Compile Include="Events\ValidatorsFiltersEvent.cs" />
     <Compile Include="Events\ValidatorsEvent.cs" />
     <Compile Include="Events\Base\EventBus.cs" />
@@ -174,6 +175,17 @@
   <ItemGroup>
     <Content Include="DLL\Microsoft.VisualStudio.TextTemplating.10.0.dll" />
     <Content Include="DLL\Microsoft.VisualStudio.TextTemplating.Interfaces.10.0.dll" />
+    <Content Include="Template\Controller.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Controller.txt</LastGenOutput>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Resource Include="Template\Controller.txt">
+      <DependentUpon>Controller.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <DesignTime>True</DesignTime>
+    </Resource>
     <Content Include="Template\dto\BatchRequestDto.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>BatchRequestDto.txt</LastGenOutput>

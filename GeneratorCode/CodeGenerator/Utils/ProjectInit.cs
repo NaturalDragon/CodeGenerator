@@ -26,7 +26,7 @@ namespace CodeGenerator.Utils
                 new ProjectModel(){ Name="ValidatorsFilters", Key="ValidatorsFiltersEvent" ,Checked=false},
                 new ProjectModel(){ Name="IModules", Key="IModulesEvent" ,Checked=false},
                 new ProjectModel(){ Name="Modules", Key="ModulesEvent" ,Checked=false},
-                
+                new ProjectModel(){ Name="Controller", Key="ControllerEvent" ,Checked=false},
                 //new ProjectModel(){ Name="DAL", Key="DalEvent" ,Checked=false}
             };
         }

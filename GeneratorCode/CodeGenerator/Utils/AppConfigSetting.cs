@@ -124,8 +124,14 @@ namespace CodeGenerator.Utils
                 return ConfigurationManager.AppSettings["TemplateModules"].ToString();
             }
         }
-      
-        
+
+        public static string TemplateController
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["TemplateController"].ToString();
+            }
+        }
 
         public static string IRespository
         {
@@ -172,6 +178,12 @@ namespace CodeGenerator.Utils
                 return ConfigurationManager.AppSettings["IModules"].ToString();
             }
         }
-
+        public static string Controller
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["Controller"].ToString();
+            }
+        }
     }
 }
