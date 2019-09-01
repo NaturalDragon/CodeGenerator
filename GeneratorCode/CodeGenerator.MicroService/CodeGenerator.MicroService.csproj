@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{702F8A09-E193-4D9F-B6CA-86D69A133E7E}</ProjectGuid>
+    <ProjectGuid>{1628BFFC-2706-4BE2-8C2B-C7ACA7B01FAB}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CodeGenerator</RootNamespace>
-    <AssemblyName>CodeGenerator</AssemblyName>
+    <RootNamespace>CodeGenerator.MicroService</RootNamespace>
+    <AssemblyName>CodeGenerator.MicroService</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>

@@ -1,0 +1,122 @@
+﻿<#@ template debug="true" hostspecific="false" language="C#" #>
+<#@ import namespace="System" #>
+<#@ import namespace="CodeGenerator" #>
+<#@ import namespace="CodeGenerator.Model" #>
+<#@ parameter type="CodeGenerator.Model.EntityClassInfo" name="entity" #>
+<#@ parameter type="System.String" name="projectName" #>
+<#@ output extension=".txt" #>
+
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
+using System.Linq;
+using System.Data;
+using Surging.Core.CPlatform.Ioc;
+using Surging.Core.ProxyGenerator;
+using MicroService.Data.Common;
+using MicroService.Data.Extensions;
+using MicroService.Data.Validation;
+using MicroService.Common.Models;
+using MicroService.IApplication.<#= projectName #>;
+using MicroService.IApplication.<#= projectName #>.Dto;
+using MicroService.IModules.<#= projectName #>;
+using Newtonsoft.Json;
+
+ namespace MicroService.Modules.<#= projectName #>
+ {
+	/// <summary>
+	/// <#= entity.ClassName#> -Module实现
+	/// </summary>
+	[ModuleName("<#= entity.ClassName#>")]
+	public class <#= entity.ClassName#>Service: ProxyServiceBase, I<#= entity.ClassName#>Service
+	{
+	    private readonly I<#= entity.ClassName#>AppService _<#= entity.ClassNameLower#>AppService;
+		private readonly ApplicationEnginee _applicationEnginee;
+        public <#= entity.ClassName#>Service(I<#= entity.ClassName#>AppService <#= entity.ClassNameLower#>AppService)
+        {
+            _<#= entity.ClassNameLower#>AppService = <#= entity.ClassNameLower#>AppService;
+			_applicationEnginee = new ApplicationEnginee();
+        }
+		/// <summary>
+        /// 新增
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public async Task<JsonResponse> Create(<#= entity.ClassName#>RequestDto input)
+        {
+			input.InitCreateRequest();
+            var resJson = await _applicationEnginee.TryTransactionAsync(async () =>
+            {
+               await _<#= entity.ClassNameLower#>AppService.CreateAsync(input);
+            });
+            return resJson;
+        }
+         /// <summary>
+        /// 批量新增
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public async Task<JsonResponse> BatchCreate(<#= entity.ClassName#>BatchRequestDto input)
+        {
+			foreach (var <#= entity.ClassNameLower#>RequestDto in input.<#= entity.ClassName#>RequestList)
+            {
+                <#= entity.ClassNameLower#>RequestDto.InitCreateRequest(input.Payload);
+            }
+            var resJson = await _applicationEnginee.TryTransactionAsync(async () =>
+            {
+               await _<#= entity.ClassNameLower#>AppService.BatchCreateAsync(input.<#= entity.ClassName#>RequestList);
+            });
+            return resJson;
+        }
+        /// <summary>
+        /// 分页获取
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public async Task<PageData> GetPageList(<#= entity.ClassName#>PageRequestDto input)
+        { 
+			input.InitRequest();
+            return await _<#= entity.ClassNameLower#>AppService.GetPageListAsync(input);
+        }
+
+        /// <summary>
+        /// 获取详情
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public async Task<<#= entity.ClassName#>QueryDto> GetForModify(EntityQueryRequest input)
+        {
+			input.InitRequest();
+            return await _<#= entity.ClassNameLower#>AppService.GetForModifyAsync(input);
+        }
+        /// <summary>
+        /// 修改
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public async Task<JsonResponse> Modify(<#= entity.ClassName#>RequestDto input)
+        {
+			input.InitModifyRequest();
+            var resJson = await _applicationEnginee.TryTransactionAsync(async () =>
+            {
+                await _<#= entity.ClassNameLower#>AppService.ModifyAsync(input);
+            });
+            return resJson;
+        }
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public async Task<JsonResponse> Remove(EntityRequest input)
+        {
+			input.InitRequest();
+            var resJson = await _applicationEnginee.TryTransactionAsync(async () =>
+            {
+               await _<#= entity.ClassNameLower#>AppService.RemoveAsync(input.Ids.ToArray());
+            });
+            return resJson;
+        }
+	}
+}

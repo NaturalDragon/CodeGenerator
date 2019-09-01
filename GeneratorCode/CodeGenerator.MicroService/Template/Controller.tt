@@ -1,0 +1,65 @@
+﻿<#@ template debug="true" hostspecific="false" language="C#" #>
+<#@ import namespace="System" #>
+<#@ import namespace="CodeGenerator" #>
+<#@ import namespace="CodeGenerator.Model" #>
+<#@ parameter type="CodeGenerator.Model.EntityClassInfo" name="entity" #>
+<#@ parameter type="System.String" name="projectName" #>
+<#@ output extension=".txt" #>
+
+using MicroService.Core.Web;
+using MicroService.Core.Web.Extensions;
+using MicroService.Core.Web.Filter;
+using MicroService.Core.Web.Routes;
+using MicroService.Data.Common;
+using MicroService.Data.Enums;
+using MicroService.Data.Validation;
+using MicroService.IApplication.<#= projectName #>.Dto;
+using MicroService.IModules.<#= projectName #>;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Threading.Tasks;
+
+ namespace MicroService.ServerHost.<#= projectName #>.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class <#= entity.ClassName#>Controller : BaseController
+    {
+        private readonly I<#= entity.ClassName#>Service _<#= entity.ClassNameLower #>Service;
+        public <#= entity.ClassName#>Controller(I<#= entity.ClassName#>Service <#= entity.ClassNameLower #>Service)
+        {
+            _<#= entity.ClassNameLower #>Service = <#= entity.ClassNameLower #>Service;
+        }
+
+        [HttpPost(BaseRoute.Create)]
+        public async Task<JsonResponse> Create(<#= entity.ClassName#>RequestDto <#= entity.ClassNameLower #>PageRequestDto)
+        {
+            <#= entity.ClassNameLower #>PageRequestDto.InitCreateRequest(loginUser);
+            return await _<#= entity.ClassNameLower #>Service.Create(<#= entity.ClassNameLower #>PageRequestDto);
+        }
+
+        [HttpPost(BaseRoute.GetPageList)]
+        public async Task<PageData> GetPageList(<#= entity.ClassName#>PageRequestDto <#= entity.ClassNameLower #>PageRequestDto)
+        {
+            return await _<#= entity.ClassNameLower #>Service.GetPageList(<#= entity.ClassNameLower #>PageRequestDto);
+        }
+
+        [HttpPost(BaseRoute.GetForModify)]
+        public async Task<<#= entity.ClassName#>QueryDto> GetForModify(EntityQueryRequest entityQueryRequest)
+        {
+            return await _<#= entity.ClassNameLower #>Service.GetForModify(entityQueryRequest);
+        }
+
+        [HttpPost(BaseRoute.Modify)]
+        public async Task<JsonResponse> Modify(<#= entity.ClassName#>RequestDto <#= entity.ClassNameLower #>PageRequestDto)
+        {
+            return await _<#= entity.ClassNameLower #>Service.Modify(<#= entity.ClassNameLower #>PageRequestDto);
+        }
+
+        [HttpPost(BaseRoute.Remove)]
+        public async Task<JsonResponse> Remove(EntityRequest  entityRequest)
+        {
+            return await _<#= entity.ClassNameLower #>Service.Remove(entityRequest);
+        }
+    }
+}

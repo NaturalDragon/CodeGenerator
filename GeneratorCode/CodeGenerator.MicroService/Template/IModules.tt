@@ -1,0 +1,75 @@
+﻿<#@ template debug="true" hostspecific="false" language="C#" #>
+<#@ import namespace="System" #>
+<#@ import namespace="CodeGenerator" #>
+<#@ import namespace="CodeGenerator.Model" #>
+<#@ parameter type="CodeGenerator.Model.EntityClassInfo" name="entity" #>
+<#@ parameter type="System.String" name="projectName" #>
+<#@ output extension=".txt" #>
+
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Text;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
+using MicroService.Core;
+using MicroService.Data.Common;
+using MicroService.Common.Models;
+using MicroService.Data.Validation;
+using MicroService.IApplication.<#= projectName #>.Dto;
+using Surging.Core.CPlatform.Filters.Implementation;
+using Surging.Core.CPlatform.Ioc;
+using Surging.Core.CPlatform.Runtime.Server.Implementation.ServiceDiscovery.Attributes;
+ namespace MicroService.IModules.<#= projectName #>
+ {
+	/// <summary>
+	/// <#= entity.ClassName#> -IModule接口
+	/// </summary>
+	[ServiceBundle("api/{Service}")]
+	public interface I<#= entity.ClassName#>Service: IServiceKey
+	{
+        /// <summary>
+        /// 新增
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+	    [Authorization(AuthType = AuthorizationType.JWT)]
+        Task<JsonResponse> Create(<#= entity.ClassName #>RequestDto input);
+        /// <summary>
+        /// 批量新增
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+		[Authorization(AuthType = AuthorizationType.JWT)]
+        Task<JsonResponse> BatchCreate(<#= entity.ClassName #>BatchRequestDto input);
+
+        /// <summary>
+        /// 分页获取
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+		[Authorization(AuthType = AuthorizationType.JWT)]
+        Task<PageData> GetPageList(<#= entity.ClassName #>PageRequestDto input);
+        /// <summary>
+        /// 获取详情
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+		[Authorization(AuthType = AuthorizationType.JWT)]
+        Task<<#= entity.ClassName #>QueryDto> GetForModify(EntityQueryRequest input);
+        /// <summary>
+        /// 修改
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+		[Authorization(AuthType = AuthorizationType.JWT)]
+        Task<JsonResponse> Modify(<#= entity.ClassName #>RequestDto input);
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+		[Authorization(AuthType = AuthorizationType.JWT)]
+        Task<JsonResponse> Remove(EntityRequest input);
+	}
+}

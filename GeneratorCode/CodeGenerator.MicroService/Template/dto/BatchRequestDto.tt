@@ -1,0 +1,25 @@
+﻿<#@ template debug="true" hostspecific="false" language="C#" #>
+<#@ output extension=".txt" #>
+<#@ import namespace="System" #>
+<#@ import namespace="CodeGenerator" #>
+<#@ import namespace="CodeGenerator.Model" #>
+<#@ parameter type="CodeGenerator.Model.EntityClassInfo" name="entity" #>
+<#@ parameter type="System.String" name="projectName" #>
+
+using MicroService.Common.Models;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+
+ namespace MicroService.IApplication.<#= projectName #>.Dto
+ {
+	/// <summary>
+	/// <#= entity.ClassName#> --dto
+	/// </summary>
+    [Serializable]
+	public class <#= entity.ClassName#>BatchRequestDto:LoginUser
+	{
+	      public List<<#= entity.ClassName #>RequestDto> <#= entity.ClassName #>RequestList { set; get; }
+	}
+}

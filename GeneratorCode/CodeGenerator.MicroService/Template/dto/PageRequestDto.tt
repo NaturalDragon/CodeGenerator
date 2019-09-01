@@ -1,0 +1,31 @@
+﻿<#@ template debug="true" hostspecific="false" language="C#" #>
+<#@ output extension=".txt" #>
+<#@ import namespace="System" #>
+<#@ import namespace="CodeGenerator" #>
+<#@ import namespace="CodeGenerator.Model" #>
+<#@ parameter type="CodeGenerator.Model.EntityClassInfo" name="entity" #>
+<#@ parameter type="System.String" name="projectName" #>
+
+
+using MicroService.Core;
+using MicroService.Data.Common;
+using MicroService.Data.Enums;
+using MicroService.Common.Models;
+using ProtoBuf;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+
+ namespace MicroService.IApplication.<#= projectName #>.Dto
+ {
+	/// <summary>
+	/// <#= entity.ClassName#> --dto
+	/// </summary>
+    [ProtoContract]
+    [Serializable]
+	public class <#= entity.ClassName#>PageRequestDto:PageData
+	{
+
+	}
+}

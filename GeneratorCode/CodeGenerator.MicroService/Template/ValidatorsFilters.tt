@@ -1,0 +1,54 @@
+﻿<#@ template debug="true" hostspecific="false" language="C#" #>
+<#@ output extension=".txt" #>
+<#@ import namespace="System" #>
+<#@ import namespace="CodeGenerator" #>
+<#@ import namespace="CodeGenerator.Model" #>
+<#@ parameter type="CodeGenerator.Model.EntityClassInfo" name="entity" #>
+<#@ parameter type="System.String" name="projectName" #>
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using MicroService.Application.<#= projectName #>.Validators;
+using MicroService.Data.Extensions;
+using MicroService.Data.Validation;
+using MicroService.Entity.<#=projectName#>;
+using MicroService.IRespository.<#=projectName#>;
+
+namespace MicroService.Application.<#=projectName#>.ValidatorsFilters
+{
+    public class <#= entity.ClassName#>ValidatorsFilter
+    {
+          /// <summary>
+        ///异步验证
+        /// </summary>
+        public static async Task DoValidationAsync(I<#= entity.ClassName#>Respository <#= entity.ClassNameLower #>Respository,<#= entity.ClassName#> <#= entity.ClassNameLower #>, string validatorType)
+        {
+            var <#= entity.ClassNameLower #>Validator = new <#= entity.ClassName#>Validator(<#= entity.ClassNameLower #>Respository);
+            var validatorReresult = await <#= entity.ClassNameLower #>Validator.DoValidateAsync(<#= entity.ClassNameLower #>, validatorType);
+            if (!validatorReresult.IsValid)
+            {
+                throw new DomainException(validatorReresult);
+            }
+        }
+
+        /// <summary>
+        ///异步验证
+        /// </summary>
+        public static async Task DoValidationAsync(I<#= entity.ClassName#>Respository <#= entity.ClassNameLower #>Respository,IEnumerable<<#= entity.ClassName#>> <#= entity.ClassNameLower #>s, string validatorType)
+        {
+            var <#= entity.ClassNameLower #>Validator = new <#= entity.ClassName#>Validator(<#= entity.ClassNameLower #>Respository);
+            var domainException = new DomainException();
+            foreach (var <#= entity.ClassNameLower #> in <#= entity.ClassNameLower #>s)
+            {
+                var validatorReresult = await <#= entity.ClassNameLower #>Validator.DoValidateAsync(<#= entity.ClassNameLower #>, validatorType);
+                if (!validatorReresult.IsValid)
+                {
+                    domainException.AddErrors(validatorReresult);
+                }
+
+            }
+
+            if (domainException.ValidationErrors.ErrorItems.Any()) throw domainException;
+        }
+    }
+}

@@ -1,0 +1,39 @@
+﻿<#@ template debug="true" hostspecific="false" language="C#" #>
+<#@ output extension=".txt" #>
+<#@ import namespace="System" #>
+<#@ import namespace="CodeGenerator" #>
+<#@ import namespace="CodeGenerator.Model" #>
+<#@ parameter type="CodeGenerator.Model.EntityClassInfo" name="entity" #>
+<#@ parameter type="System.String" name="projectName" #>
+using MicroService.Core;
+using MicroService.Data.Enums;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Text;
+
+ namespace MicroService.Entity.<#= projectName #>
+ {
+	/// <summary>
+	/// <#= entity.ClassName#> --实体
+	/// </summary>
+	public class <#= entity.ClassName#>:Entity<string>
+	{
+  <#  foreach(EntityClassPropertyInfo property in entity.RopertyList)
+    { #>
+		//<summary>
+		// <#= property.ProptertyComment #>
+		//<summary>
+	<#if(property.PropertyType=="string"&&property.ProptertyMaxLength>0){#>
+	[StringLength(<#= (property.ProptertyMaxLength) #>)]
+	<#}#>
+	<#if(!property.ProptertyIsNull){#>
+[Required]
+	<#}#>
+	public <#= property.PropertyType#> <#= property.PropertyName#> { set; get; }
+<#;
+    }
+#>
+ 
+	}
+}
