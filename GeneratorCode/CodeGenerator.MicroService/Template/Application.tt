@@ -33,15 +33,13 @@ using MicroService.Application.<#= projectName #>.ValidatorsFilters;
 	public class <#= entity.ClassName#>AppService:I<#= entity.ClassName#>AppService
 	{
      
-        public I<#= entity.ClassName#>Respository _<#= entity.ClassNameLower #>Respository;
+        private readonly I<#= entity.ClassName#>Respository _<#= entity.ClassNameLower #>Respository;
         private readonly IMapper _mapper;
-		private readonly IUnitOfWork _unitOfWork;
         public <#= entity.ClassName#>AppService(I<#= entity.ClassName#>Respository <#= entity.ClassNameLower #>Respository,
-          IMapper mapper,IUnitOfWork unitOfWork)
+          IMapper mapper)
         {
             _<#= entity.ClassNameLower #>Respository = <#= entity.ClassNameLower #>Respository;
             _mapper = mapper;
-			_unitOfWork = unitOfWork;
         }
     
         /// <summary>
@@ -54,9 +52,7 @@ using MicroService.Application.<#= projectName #>.ValidatorsFilters;
          
             var <#= entity.ClassNameLower #> = _mapper.Map<<#= entity.ClassName#>RequestDto, <#= entity.ClassName#>>(<#= entity.ClassNameLower #>RequestDto);
             await <#= entity.ClassName#>ValidatorsFilter.DoValidationAsync(_<#= entity.ClassNameLower #>Respository,<#= entity.ClassNameLower #>, ValidatorTypeConstants.Create);
-            await _<#= entity.ClassNameLower#>Respository.InsertAsync(<#= entity.ClassNameLower #>);
-            return await _unitOfWork.SaveChangesAsync()>0;
-            
+            return await _<#= entity.ClassNameLower#>Respository.InsertAsync(<#= entity.ClassNameLower #>);  
         }
         /// <summary>
         /// 批量新增
@@ -68,7 +64,7 @@ using MicroService.Application.<#= projectName #>.ValidatorsFilters;
             var entities = <#= entity.ClassNameLower #>RequestDtos.MapToList<<#= entity.ClassName#>RequestDto, <#= entity.ClassName#>>();
             await <#= entity.ClassName#>ValidatorsFilter.DoValidationAsync(_<#= entity.ClassNameLower #>Respository,entities, ValidatorTypeConstants.Create);
             await _<#= entity.ClassNameLower#>Respository.BatchInsertAsync(entities);
-            return await _unitOfWork.SaveChangesAsync()>0;
+            return true;
          
         }
 
@@ -153,9 +149,7 @@ using MicroService.Application.<#= projectName #>.ValidatorsFilters;
         {
             var <#= entity.ClassNameLower #> = _mapper.Map<<#= entity.ClassName#>RequestDto, <#= entity.ClassName#>>(<#= entity.ClassNameLower #>RequestDto);
             await <#= entity.ClassName#>ValidatorsFilter.DoValidationAsync(_<#= entity.ClassNameLower #>Respository,<#= entity.ClassNameLower #>, ValidatorTypeConstants.Modify);
-            await _<#= entity.ClassNameLower#>Respository.UpdateAsync(<#= entity.ClassNameLower #>);
-            return await _unitOfWork.SaveChangesAsync()>0;
-          
+            return await _<#= entity.ClassNameLower#>Respository.UpdateAsync(<#= entity.ClassNameLower #>); 
         }
 
         /// <summary>
@@ -165,13 +159,12 @@ using MicroService.Application.<#= projectName #>.ValidatorsFilters;
         /// <returns></returns>
         public async Task<bool> RemoveAsync(params string[] ids)
         {
-           await _<#= entity.ClassNameLower#>Respository.UpdateAsync(ids,  async (e)=> {
+          return  await _<#= entity.ClassNameLower#>Respository.UpdateAsync(ids,  async (e)=> {
                await Task.Run(() =>
               {
                   e.IsDelete = true;
               });
            });
-           return await _unitOfWork.SaveChangesAsync()>0;
          
         }
 	}
