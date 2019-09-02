@@ -147,9 +147,10 @@ using MicroService.Application.<#= projectName #>.ValidatorsFilters;
         /// <returns></returns>
         public async Task<bool> ModifyAsync(<#= entity.ClassName#>RequestDto <#= entity.ClassNameLower #>RequestDto)
         {
-            var <#= entity.ClassNameLower #> = _mapper.Map<<#= entity.ClassName#>RequestDto, <#= entity.ClassName#>>(<#= entity.ClassNameLower #>RequestDto);
-            await <#= entity.ClassName#>ValidatorsFilter.DoValidationAsync(_<#= entity.ClassNameLower #>Respository,<#= entity.ClassNameLower #>, ValidatorTypeConstants.Modify);
-            return await _<#= entity.ClassNameLower#>Respository.UpdateAsync(<#= entity.ClassNameLower #>); 
+            var <#= entity.ClassNameLower #> = await _orderDetailRespository.FirstOrDefaultAsync(e => e.Id == orderDetailRequestDto.Id);
+            var entity = orderDetailRequestDto.MapToModifyEntity<<#= entity.ClassName#>RequestDto, <#= entity.ClassName#>>(<#= entity.ClassNameLower #>);
+            await <#= entity.ClassName#>ValidatorsFilter.DoValidationAsync(_<#= entity.ClassNameLower #>Respository,entity, ValidatorTypeConstants.Modify);
+            return await _<#= entity.ClassNameLower#>Respository.UpdateAsync(entity); 
         }
 
         /// <summary>

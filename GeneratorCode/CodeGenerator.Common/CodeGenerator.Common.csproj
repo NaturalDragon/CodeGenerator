@@ -61,7 +61,6 @@
     <Compile Include="Utils\AppConfigSetting.cs" />
     <Compile Include="Utils\FileHelper.cs" />
     <Compile Include="Utils\MySqlHelper.cs" />
-    <Compile Include="Utils\ProjectInit.cs" />
     <Compile Include="Utils\SqlServerDbTypeMap.cs" />
     <Compile Include="Utils\SqlServerHelper.cs" />
     <Compile Include="Utils\StringExtensins.cs" />
