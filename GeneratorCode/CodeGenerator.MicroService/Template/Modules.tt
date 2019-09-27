@@ -111,10 +111,10 @@ using Newtonsoft.Json;
         /// <returns></returns>
         public async Task<JsonResponse> Remove(EntityRequest input)
         {
-			input.InitRequest();
+			input.InitModifyRequest();
             var resJson = await _applicationEnginee.TryTransactionAsync(async () =>
             {
-               await _<#= entity.ClassNameLower#>AppService.RemoveAsync(input.Ids.ToArray());
+               await _<#= entity.ClassNameLower#>AppService.RemoveAsync(input);
             });
             return resJson;
         }

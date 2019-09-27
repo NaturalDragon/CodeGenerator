@@ -43,28 +43,6 @@ using MicroService.IApplication.<#= projectName #>.Dto;
         /// <param name="<#= entity.ClassNameLower #>PageRequestDto"></param>
         /// <returns></returns>
         Task<PageData> GetPageListAsync(<#= entity.ClassName #>PageRequestDto <#= entity.ClassNameLower #>PageRequestDto);
-		
-		 /// <summary>
-        /// 获取集合
-        /// </summary>
-        /// <param name="predicate"></param>
-        /// <returns></returns>
-        Task<IList<<#= entity.ClassName #>QueryDto>> QueryAsync(Expression<Func<<#= entity.ClassName #>, bool>> predicate);
-
-        /// <summary>
-        /// 获取单条
-        /// </summary>
-        /// <param name="predicate"></param>
-        /// <returns></returns>
-        Task<<#= entity.ClassName #>QueryDto> QuerySingleAsync(Expression<Func<<#= entity.ClassName #>, bool>> predicate);
-
-        /// <summary>
-        /// 根据Id获取
-        /// </summary>
-        /// <param name="Id"></param>
-        /// <returns></returns>
-        Task<<#= entity.ClassName #>QueryDto> Get<#= entity.ClassName #>ById(string Id);
-
 		/// <summary>
         /// 获取详情
         /// </summary>

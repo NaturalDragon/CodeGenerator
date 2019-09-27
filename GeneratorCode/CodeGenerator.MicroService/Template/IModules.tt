@@ -17,9 +17,14 @@ using MicroService.Data.Common;
 using MicroService.Common.Models;
 using MicroService.Data.Validation;
 using MicroService.IApplication.<#= projectName #>.Dto;
+using MicroService.FuseStrategy.Injection;
 using Surging.Core.CPlatform.Filters.Implementation;
 using Surging.Core.CPlatform.Ioc;
 using Surging.Core.CPlatform.Runtime.Server.Implementation.ServiceDiscovery.Attributes;
+using Surging.Core.CPlatform.Support.Attributes;
+using Surging.Core.CPlatform.Support;
+using Surging.Core.System.Intercept;
+using Surging.Core.Caching;
  namespace MicroService.IModules.<#= projectName #>
  {
 	/// <summary>
@@ -33,6 +38,8 @@ using Surging.Core.CPlatform.Runtime.Server.Implementation.ServiceDiscovery.Attr
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+		[HttpPost(true)]
+        [Command(Strategy = StrategyType.Injection,Injection = Strategy.BaseStrategy,RequestCacheEnabled = true,InjectionNamespaces = new string[] { InjectionNamespace.JsonResponseNamespaces})]
 	    [Authorization(AuthType = AuthorizationType.JWT)]
         Task<JsonResponse> Create(<#= entity.ClassName #>RequestDto input);
         /// <summary>
@@ -40,6 +47,8 @@ using Surging.Core.CPlatform.Runtime.Server.Implementation.ServiceDiscovery.Attr
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+		[HttpPost(true)]
+        [Command(Strategy = StrategyType.Injection,Injection = Strategy.BaseStrategy,RequestCacheEnabled = true,InjectionNamespaces = new string[] { InjectionNamespace.JsonResponseNamespaces})]
 		[Authorization(AuthType = AuthorizationType.JWT)]
         Task<JsonResponse> BatchCreate(<#= entity.ClassName #>BatchRequestDto input);
 
@@ -48,6 +57,8 @@ using Surging.Core.CPlatform.Runtime.Server.Implementation.ServiceDiscovery.Attr
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+		[HttpPost(true)]
+        [Command(Strategy = StrategyType.Injection, Injection = Strategy.MessageStrategy, RequestCacheEnabled = true)]
 		[Authorization(AuthType = AuthorizationType.JWT)]
         Task<PageData> GetPageList(<#= entity.ClassName #>PageRequestDto input);
         /// <summary>
@@ -55,6 +66,8 @@ using Surging.Core.CPlatform.Runtime.Server.Implementation.ServiceDiscovery.Attr
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+		[HttpPost(true)]
+        [Command(Strategy = StrategyType.Injection, Injection = Strategy.MessageStrategy, RequestCacheEnabled = true)]
 		[Authorization(AuthType = AuthorizationType.JWT)]
         Task<<#= entity.ClassName #>QueryDto> GetForModify(EntityQueryRequest input);
         /// <summary>
@@ -62,6 +75,8 @@ using Surging.Core.CPlatform.Runtime.Server.Implementation.ServiceDiscovery.Attr
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+		[HttpPost(true)]
+        [Command(Strategy = StrategyType.Injection,Injection = Strategy.BaseStrategy,RequestCacheEnabled = true,InjectionNamespaces = new string[] { InjectionNamespace.JsonResponseNamespaces})]
 		[Authorization(AuthType = AuthorizationType.JWT)]
         Task<JsonResponse> Modify(<#= entity.ClassName #>RequestDto input);
         /// <summary>
@@ -69,6 +84,8 @@ using Surging.Core.CPlatform.Runtime.Server.Implementation.ServiceDiscovery.Attr
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
+		[HttpPost(true)]
+        [Command(Strategy = StrategyType.Injection,Injection = Strategy.BaseStrategy,RequestCacheEnabled = true,InjectionNamespaces = new string[] { InjectionNamespace.JsonResponseNamespaces})]
 		[Authorization(AuthType = AuthorizationType.JWT)]
         Task<JsonResponse> Remove(EntityRequest input);
 	}

@@ -68,7 +68,6 @@ using MicroService.Application.<#= projectName #>.ValidatorsFilters;
          
         }
 
-      
         /// <summary>
         /// 分页获取
         /// </summary>
@@ -83,47 +82,6 @@ using MicroService.Application.<#= projectName #>.ValidatorsFilters;
 			 pageData.Data = list.MapToList<<#= entity.ClassName#>, <#= entity.ClassName#>QueryDto>().ToList();
             return pageData;
 
-        }
-
-		/// <summary>
-        /// 获取集合
-        /// </summary>
-        /// <param name="predicate"></param>
-        /// <returns></returns>
-        public async Task<IList<<#= entity.ClassName#>QueryDto>> QueryAsync(Expression<Func<<#= entity.ClassName#>, bool>> predicate)
-        {
-            var list =await  _<#= entity.ClassNameLower#>Respository.EntitiesByExpressionAsync(predicate); 
-            return list.MapToList<<#= entity.ClassName#>, <#= entity.ClassName#>QueryDto>().ToList(); ;
-
-        }
-        /// <summary>
-        /// 获取单条
-        /// </summary>
-        /// <param name="predicate"></param>
-        /// <returns></returns>
-        public async Task<<#= entity.ClassName#>QueryDto> QuerySingleAsync(Expression<Func<<#= entity.ClassName#>, bool>> predicate)
-        {
-            var entity = await _<#= entity.ClassNameLower#>Respository.FirstOrDefaultAsync(predicate);
-			if (entity != null)
-            {
-                return entity.MapEntity<<#= entity.ClassName#>, <#= entity.ClassName#>QueryDto>();
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// 根据Id获取
-        /// </summary>
-        /// <param name="Id"></param>
-        /// <returns></returns>
-        public async Task<<#= entity.ClassName#>QueryDto> Get<#= entity.ClassName#>ById(string Id)
-        {
-            var entity = await _<#= entity.ClassNameLower#>Respository.FirstOrDefaultAsync(e => e.Id == Id);
-            if (entity != null)
-            {
-                return entity.MapEntity<<#= entity.ClassName#>, <#= entity.ClassName#>QueryDto>();
-            }
-            return null;
         }
 
         /// <summary>
@@ -147,8 +105,8 @@ using MicroService.Application.<#= projectName #>.ValidatorsFilters;
         /// <returns></returns>
         public async Task<bool> ModifyAsync(<#= entity.ClassName#>RequestDto <#= entity.ClassNameLower #>RequestDto)
         {
-            var <#= entity.ClassNameLower #> = await _orderDetailRespository.FirstOrDefaultAsync(e => e.Id == orderDetailRequestDto.Id);
-            var entity = orderDetailRequestDto.MapToModifyEntity<<#= entity.ClassName#>RequestDto, <#= entity.ClassName#>>(<#= entity.ClassNameLower #>);
+            var <#= entity.ClassNameLower #> = await _<#= entity.ClassNameLower#>Respository.FirstOrDefaultAsync(e => e.Id == <#= entity.ClassNameLower #>RequestDto.Id);
+            var entity = <#= entity.ClassNameLower #>RequestDto.MapToModifyEntity<<#= entity.ClassName#>RequestDto, <#= entity.ClassName#>>(<#= entity.ClassNameLower #>);
             await <#= entity.ClassName#>ValidatorsFilter.DoValidationAsync(_<#= entity.ClassNameLower #>Respository,entity, ValidatorTypeConstants.Modify);
             return await _<#= entity.ClassNameLower#>Respository.UpdateAsync(entity); 
         }
@@ -158,14 +116,18 @@ using MicroService.Application.<#= projectName #>.ValidatorsFilters;
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>
-        public async Task<bool> RemoveAsync(params string[] ids)
+        public async Task<bool> RemoveAsync(EntityRequest entityRequest)
         {
-          return  await _<#= entity.ClassNameLower#>Respository.UpdateAsync(ids,  async (e)=> {
-               await Task.Run(() =>
-              {
-                  e.IsDelete = true;
-              });
-           });
+            return await _<#= entity.ClassNameLower#>Respository.UpdateAsync(entityRequest.Ids.ToArray(), async (e) =>
+            {
+                await Task.Run(() =>
+               {
+                   e.IsDelete = true;
+                   e.ModifyUserId = entityRequest.ModifyUserId;
+                   e.ModifyUserName = entityRequest.ModifyUserName;
+                   e.ModifyDate = entityRequest.ModifyDate;
+               });
+            });
          
         }
 	}

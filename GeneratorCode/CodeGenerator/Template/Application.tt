@@ -87,43 +87,6 @@ using MicroService.Application.<#= projectName #>.ValidatorsFilters;
 
         }
 
-		/// <summary>
-        /// 获取集合
-        /// </summary>
-        /// <param name="predicate"></param>
-        /// <returns></returns>
-        public async Task<IList<<#= entity.ClassName#>QueryDto>> QueryAsync(Expression<Func<<#= entity.ClassName#>, bool>> predicate)
-        {
-            var list =await  _<#= entity.ClassNameLower#>Respository.Entities(predicate).ToListAsync(); 
-            return list.MapToList<<#= entity.ClassName#>, <#= entity.ClassName#>QueryDto>().ToList(); ;
-
-        }
-        /// <summary>
-        /// 获取单条
-        /// </summary>
-        /// <param name="predicate"></param>
-        /// <returns></returns>
-        public async Task<<#= entity.ClassName#>QueryDto> QuerySingleAsync(Expression<Func<<#= entity.ClassName#>, bool>> predicate)
-        {
-            var model = await _<#= entity.ClassNameLower#>Respository.Entities(predicate).FirstOrDefaultAsync();
-            return model.MapEntity<<#= entity.ClassName#>, <#= entity.ClassName#>QueryDto>();
-        }
-
-        /// <summary>
-        /// 根据Id获取
-        /// </summary>
-        /// <param name="Id"></param>
-        /// <returns></returns>
-        public async Task<<#= entity.ClassName#>QueryDto> Get<#= entity.ClassName#>ById(string Id)
-        {
-            var entity = await _<#= entity.ClassNameLower#>Respository.Entities(e => e.Id == Id).SingleOrDefaultAsync();
-            if (entity != null)
-            {
-                return entity.MapEntity<<#= entity.ClassName#>, <#= entity.ClassName#>QueryDto>();
-            }
-            return null;
-        }
-
         /// <summary>
         /// 获取详情
         /// </summary>
